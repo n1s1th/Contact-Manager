@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export function ContactCard({ contact, onDelete }) {
+export function ContactCard({ contact, onDelete, onEdit }) {
   return (
     <Card className="mb-4 p-4 flex items-center justify-between">
       <div>
@@ -11,9 +11,14 @@ export function ContactCard({ contact, onDelete }) {
         <div>{contact.phone}</div>
         <div>{contact.email}</div>
       </div>
-      <Button variant="destructive" onClick={onDelete}>
-        Delete
-      </Button>
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={onEdit}>
+          Edit
+        </Button>
+        <Button variant="destructive" onClick={onDelete}>
+          Delete
+        </Button>
+      </div>
     </Card>
   );
 }

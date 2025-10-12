@@ -1,19 +1,36 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function ContactForm({ onAdd }) {
+export default function ContactForm({ onAdd, initial, onEdit, onCancel }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
 
+  useEffect(() => {
+    if (initial) {
+      setName(initial.name);
+      setPhone(initial.phone);
+      setEmail(initial.email);
+    } else {
+      setName("");
+      setPhone("");
+      setEmail("");
+    }
+  }, [initial]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAdd({ name, phone, email });
-    setName("");
-    setPhone("");
-    setEmail("");
+    if (onEdit) {
+      onEdit({ name, phone, email });
+    } else {
+      onAdd({ name, phone, email });
+      setName("");
+      setPhone("");
+      setEmail("");
+    }
   };
 
   return (
@@ -37,7 +54,10 @@ export default function ContactForm({ onAdd }) {
         required
         type="email"
       />
-      <Button type="submit">Add Contact</Button>
+      <div className="flex gap-2">
+        <Button type="submit">{onEdit ? "Update" : "Add Contact"}</Button>
+        {onEdit && <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>}
+      </div>
     </form>
   );
 }
