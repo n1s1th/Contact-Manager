@@ -3,8 +3,16 @@
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Contact } from "@/services/contactService";
 
-export default function ContactForm({ onAdd, initial, onEdit, onCancel }) {
+interface ContactFormProps {
+  onAdd?: (contact: Omit<Contact, 'id'>) => void;
+  initial?: Contact;
+  onEdit?: (contact: Omit<Contact, 'id'>) => void;
+  onCancel?: () => void;
+}
+
+export default function ContactForm({ onAdd, initial, onEdit, onCancel }: ContactFormProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -21,12 +29,14 @@ export default function ContactForm({ onAdd, initial, onEdit, onCancel }) {
     }
   }, [initial]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const contact = { name, phone, email };
+    
     if (onEdit) {
-      onEdit({ name, phone, email });
-    } else {
-      onAdd({ name, phone, email });
+      onEdit(contact);
+    } else if (onAdd) {
+      onAdd(contact);
       setName("");
       setPhone("");
       setEmail("");
@@ -55,8 +65,12 @@ export default function ContactForm({ onAdd, initial, onEdit, onCancel }) {
         type="email"
       />
       <div className="flex gap-2">
-        <Button type="submit">{onEdit ? "Update" : "Add Contact"}</Button>
-        {onEdit && <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>}
+        <Button type="submit">{onEdit ? "Update Contact" : "Add Contact"}</Button>
+        {onEdit && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
       </div>
     </form>
   );
