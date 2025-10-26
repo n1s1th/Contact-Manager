@@ -1,8 +1,6 @@
-// src/services/contactService.ts
-
 const API_BASE_URL = 'http://localhost:8080/api/contacts';
 
-// Define Contact interface
+
 export interface Contact {
   id?: number;
   name: string;
@@ -10,7 +8,7 @@ export interface Contact {
   email: string;
 }
 
-// CREATE - Add new contact
+// Add contact
 export const createContact = async (contact: Omit<Contact, 'id'>): Promise<Contact> => {
   try {
     const response = await fetch(API_BASE_URL, {
